@@ -220,6 +220,12 @@
     });
 
     document.querySelector('#startButton').addEventListener('click', function() {
+
+    	const h1Text = document.querySelector('h1').innerHTML;
+    	if (h1Text === "do you really think it's stopped?") {
+		    document.querySelector('h1').innerHTML = headlines[Math.floor(Math.random() * headlines.length)];
+    	}
+
         clearInterval(intervalId);
         // const upperBound = 72.8;
         let rotation = lowerBound;
@@ -252,6 +258,7 @@
 
     document.querySelector('#stopButton').addEventListener('click', function() {
         clearInterval(intervalId);
+        document.querySelector('h1').innerHTML = 'do you really think it\'s stopped?'
     });
 
     document.querySelector('#widthSlider').addEventListener('input', function(e) {
