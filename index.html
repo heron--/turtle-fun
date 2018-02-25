@@ -1,0 +1,305 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+
+<head>
+    <title>Javascript Turtle</title>
+    <script type="text/javascript" src="jquery-1.6.4.js"></script>
+    <link type="text/css" rel="stylesheet" href="turtle.css" />
+</head>
+
+<body>
+    <h1></h1>
+    <div id="wrap">
+        <div id="midcolumn">
+            <canvas id="turtlecanvas" width="500" height="500"></canvas>
+            <canvas id="imagecanvas" width="500" height="500" style="display:none"></canvas>
+            <button id="startButton">Start Weirdness</button>
+            <button id="stopButton">Stop Weirdness</button>
+        </div>
+        <div id="rightcolumn">
+            <div>
+                <label>Line Width</label>
+                <input type="range" min="1" max="10" id="widthSlider" value="1" />
+            </div>
+            <div>
+                <label>Lower Rotation Bound</label>
+                <input type="number" value="118" id="lowerBound" />
+            </div>
+            <div>
+                <label>Upper Rotation Bound</label>
+                <input type="number" value="121" id="upperBound" />
+            </div>
+            <div>
+                <p><strong>Shape</strong></p>
+                <div>
+                    <label>Triangle</label>
+                    <input type="radio" name="shape" value="triangle" checked="true" />
+                </div>
+                <div>
+                    <label>Square</label>
+                    <input type="radio" name="shape" value="square" />
+                </div>
+                <div>
+                    <label>Pentagon</label>
+                    <input type="radio" name="shape" value="pentagon" />
+                </div>
+                <div>
+                    <label>Hexagon</label>
+                    <input type="radio" name="shape" value="hexagon" />
+                </div>
+                <div>
+                    <label>Heptagon</label>
+                    <input type="radio" name="shape" value="heptagon" />
+                </div>
+                <div>
+                    <label>Octagon</label>
+                    <input type="radio" name="shape" value="octagon" />
+                </div>
+                <div>
+                    <label>Dodecagon</label>
+                    <input type="radio" name="shape" value="dodecagon" />
+                </div>
+                <div>
+                    <label>Heptadecagon</label>
+                    <input type="radio" name="shape" value="heptadecagon" />
+                </div>
+                <div>
+                    <label>⚠️Click at your own risk⚠️<br />Tetracontadigon</label>
+                    <input type="radio" name="shape" value="tetracontadigon" />
+                </div>
+            </div>
+            <div>
+                <p><strong>Speed</strong></p>
+                <div>
+                    <label>2x</label>
+                    <input type="radio" name="speed" value="0.2" />
+                </div>
+                <div>
+                    <label>1x</label>
+                    <input type="radio" name="speed" value="0.1" checked="true" />
+                </div>
+                <div>
+                    <label>1/10x</label>
+                    <input type="radio" name="speed" value="0.01" />
+                </div>
+                <div>
+                    <label>1/100x</label>
+                    <input type="radio" name="speed" value="0.001" />
+                </div>
+            </div>
+            <div>
+                <label>Randomize color</label>
+                <input type="checkbox" id="randomColors" checked="true" />
+            </div>
+            <div>
+                <label>Destroy me</label>
+                <input type="checkbox" id="destroy" />
+            </div>
+            <div id="currentRotation" style="width: 200px"></div>
+        </div>
+    </div>
+        <div class="little-bitty">Made with a nice little turtle from <a href="https://github.com/bjpop/js-turtle">https://github.com/bjpop/js-turtle</a></div>
+    <style>
+	    #currentRotation {
+	        font-size: 32px;
+	        color: #fa002b;
+	    }
+
+	    .little-bitty {
+	    	max-width: 800px;
+	    	margin: 24px auto;
+	    	font-size: 11px;
+	    }
+    </style>
+    <script type="text/javascript" src="turtle.js"></script>
+    <script>
+    function drawPolygon(sideLength, sideCount) {
+    	repeat(sideCount, () => { forward(sideLength); right(Math.floor(360/sideCount)); });
+    }
+
+    function updateDomRotation(rotation) {
+        document.querySelector('#currentRotation').innerHTML = rotation;
+    }
+
+    hideTurtle();
+
+    function drawDemRotates(rotation, randomColors, drawFunc, sideMax) {
+        for (let side = sideMax; side > 0; side--) {
+
+            if (randomColors) {
+                const r = Math.floor(Math.random() * 255);
+                const g = Math.floor(Math.random() * 255);
+                const b = Math.floor(Math.random() * 255);
+                colour(r, g, b, 0.8);
+            } else {
+                colour(20, 20, 20, 0.8)
+            }
+
+            drawFunc(side);
+            right(rotation || 36);
+        }
+    }
+
+    function drawDemParty(rotation, randomColors, drawFunc, sideMax) {
+        for (let side = sideMax; side > 0; side--) {
+
+            if (randomColors) {
+                const r = Math.floor(Math.random() * 255);
+                const g = Math.floor(Math.random() * 255);
+                const b = Math.floor(Math.random() * 255);
+                colour(r, g, b, 0.8);
+            } else {
+                colour(20, 20, 20, 0.8)
+            }
+
+            drawFunc(side);
+            right(rotation);
+            forward(Math.pow(rotation, 2))
+        }
+    }
+
+    const shapes = {
+        triangle: {
+            drawFunc: length => drawPolygon(length, 3),
+            sideMax: 200,
+        },
+        square: {
+            drawFunc: length => drawPolygon(length, 4),
+            sideMax: 150,
+        },
+        pentagon: {
+            drawFunc: length => drawPolygon(length, 5),
+            sideMax: 140,
+        },
+        hexagon: {
+            drawFunc: length => drawPolygon(length, 6),
+            sideMax: 122,
+        },
+        heptagon: {
+            drawFunc: length => drawPolygon(length, 7),
+            sideMax: 100,
+        },
+        octagon: {
+            drawFunc: length => drawPolygon(length, 8),
+            sideMax: 80,
+        },
+        dodecagon: {
+            drawFunc: length => drawPolygon(length, 12),
+            sideMax: 60,
+        },
+        heptadecagon: {
+            drawFunc: length => drawPolygon(length, 17),
+            sideMax: 60,
+        },
+        tetracontadigon: {
+            drawFunc: length => drawPolygon(length, 42),
+            sideMax: 30,
+        },
+    };
+
+    let intervalId = null;
+    let lineWidth = 1;
+    let lowerBound = parseFloat(document.querySelector('#lowerBound').value);
+    let upperBound = parseFloat(document.querySelector('#upperBound').value);
+    let shape = shapes[document.querySelector('input[name="shape"]').value];
+    let randomColors = document.querySelector('#randomColors').checked;
+    let destroy = document.querySelector('#destroy').checked;
+    let speed;
+
+    document.querySelectorAll('input[name="speed"').forEach(i => {
+        if (i.checked) {
+            speed = parseFloat(i.value);
+        }
+    });
+
+    document.querySelector('#startButton').addEventListener('click', function() {
+        clearInterval(intervalId);
+        // const upperBound = 72.8;
+        let rotation = lowerBound;
+        let direction = 'forward'
+
+        intervalId = setInterval(() => {
+            clear();
+            width(lineWidth);
+            if (destroy) {
+	            drawDemParty(rotation, randomColors, shape.drawFunc, shape.sideMax);
+            } else {
+	            drawDemRotates(rotation, randomColors, shape.drawFunc, shape.sideMax);
+            }
+
+            if (rotation > upperBound) {
+                direction = 'backward';
+                rotation = upperBound;
+            }
+
+            if (rotation < lowerBound) {
+                direction = 'forward';
+                rotation = lowerBound;
+            }
+
+            rotation = direction === 'forward' ? rotation + speed : rotation - speed;
+
+            updateDomRotation(Math.round((rotation * 1000)) / 1000);
+        }, 80);
+    });
+
+    document.querySelector('#stopButton').addEventListener('click', function() {
+        clearInterval(intervalId);
+    });
+
+    document.querySelector('#widthSlider').addEventListener('input', function(e) {
+        lineWidth = parseInt(e.currentTarget.value, 10);
+    });
+
+    document.querySelector('#upperBound').addEventListener('input', function(e) {
+        upperBound = parseFloat(e.currentTarget.value);
+    });
+
+    document.querySelector('#lowerBound').addEventListener('input', function(e) {
+        lowerBound = parseFloat(e.currentTarget.value);
+    });
+
+    document.querySelectorAll('input[name="shape"]').forEach(r => {
+        r.addEventListener('change', function(e) {
+            shape = shapes[e.currentTarget.value];
+        })
+    });
+
+    document.querySelectorAll('input[name="speed"]').forEach(r => {
+        r.addEventListener('change', function(e) {
+            speed = parseFloat(e.currentTarget.value);
+        })
+    });
+
+    document.querySelector('#randomColors').addEventListener('change', function(e) {
+        randomColors = e.currentTarget.checked;
+    });
+
+    document.querySelector('#destroy').addEventListener('change', function(e) {
+        destroy = e.currentTarget.checked;
+    });
+
+    const headlines = [
+     	'How much damage can one turtle do?',
+     	'Fun with turtles',
+     	'Fun with turtles!',
+     	'Fun with turtles!',
+     	'Fun with JS turtles!',
+     	'Fun with turtle scripts!',
+     	'Fun with turtles!',
+     	'Fun with turtles, probably',
+     	'🐢🐢🐢🐢🐢🐢🐢🐢🐢🐢',
+     	'I made this and it won\'t let me go. I want to leave, but I can\'t',
+     	'JS turtle pics!',
+     	'JS turtle drawings!',
+     	'Fun shapes made with a turtle🐢',
+     	'Drawing with Javascript!🐢',
+     	'Fun drawings!🐢',
+     	'JS drawings!🐢🐢',
+     	'help',
+    ];
+    document.querySelector('h1').innerHTML = headlines[Math.floor(Math.random() * headlines.length)];
+    </script>
+</body>
+
+</html>
