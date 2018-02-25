@@ -63,7 +63,7 @@
                     <label>Heptadecagon</label>
                     <input type="radio" name="shape" value="heptadecagon" />
                 </div>
-                <div>
+                <div class="danger" style="display: none;">
                     <label>⚠️Click at your own risk⚠️<br />Tetracontadigon</label>
                     <input type="radio" name="shape" value="tetracontadigon" />
                 </div>
@@ -319,7 +319,7 @@
 
     	if (Date.now() > lastRun + bodyRotateSpeed && !tetraClicked) {
     		lastRun = Date.now();
-	    	document.body.style = `transform: rotate(${bodyRotate++}deg)`
+	    	document.body.style = `transform: rotate(${++bodyRotate}deg)`
     	}
 
     	if (bodyRotateSpeed) {
@@ -327,6 +327,8 @@
     	}	
 
     }, 1);
+
+    setInterval(() => {document.querySelector('.danger').style = "display: block;";}, 90000)
 
     document.querySelector('h1').innerHTML = headlines[Math.floor(Math.random() * headlines.length)];
     document.querySelector('h1').addEventListener('click', function() {
