@@ -113,6 +113,59 @@
     </style>
     <script type="text/javascript" src="turtle.js"></script>
     <script>
+    const shapes = {
+        triangle: {
+            drawFunc: length => drawPolygon(length, 3),
+            sideMax: 200,
+        },
+        square: {
+            drawFunc: length => drawPolygon(length, 4),
+            sideMax: 150,
+        },
+        pentagon: {
+            drawFunc: length => drawPolygon(length, 5),
+            sideMax: 140,
+        },
+        hexagon: {
+            drawFunc: length => drawPolygon(length, 6),
+            sideMax: 122,
+        },
+        heptagon: {
+            drawFunc: length => drawPolygon(length, 7),
+            sideMax: 100,
+        },
+        octagon: {
+            drawFunc: length => drawPolygon(length, 8),
+            sideMax: 80,
+        },
+        dodecagon: {
+            drawFunc: length => drawPolygon(length, 12),
+            sideMax: 60,
+        },
+        heptadecagon: {
+            drawFunc: length => drawPolygon(length, 17),
+            sideMax: 60,
+        },
+        tetracontadigon: {
+            drawFunc: length => {
+            	drawPolygon(length, 42);
+            	document.querySelector('h1').innerHTML = 'i tried to warned you';
+            	tetraClicked = true;
+            },
+            sideMax: 30,
+        },
+    };
+
+    let intervalId = null;
+    let lineWidth = 1;
+    let lowerBound = parseFloat(document.querySelector('#lowerBound').value);
+    let upperBound = parseFloat(document.querySelector('#upperBound').value);
+    let shape = shapes[document.querySelector('input[name="shape"]').value];
+    let randomColors = document.querySelector('#randomColors').checked;
+    let destroy = document.querySelector('#destroy').checked;
+    let speed;
+    let tetraClicked = false;
+
     function drawPolygon(sideLength, sideCount) {
     	repeat(sideCount, () => { forward(sideLength); right(Math.floor(360/sideCount)); });
     }
@@ -158,53 +211,7 @@
         }
     }
 
-    const shapes = {
-        triangle: {
-            drawFunc: length => drawPolygon(length, 3),
-            sideMax: 200,
-        },
-        square: {
-            drawFunc: length => drawPolygon(length, 4),
-            sideMax: 150,
-        },
-        pentagon: {
-            drawFunc: length => drawPolygon(length, 5),
-            sideMax: 140,
-        },
-        hexagon: {
-            drawFunc: length => drawPolygon(length, 6),
-            sideMax: 122,
-        },
-        heptagon: {
-            drawFunc: length => drawPolygon(length, 7),
-            sideMax: 100,
-        },
-        octagon: {
-            drawFunc: length => drawPolygon(length, 8),
-            sideMax: 80,
-        },
-        dodecagon: {
-            drawFunc: length => drawPolygon(length, 12),
-            sideMax: 60,
-        },
-        heptadecagon: {
-            drawFunc: length => drawPolygon(length, 17),
-            sideMax: 60,
-        },
-        tetracontadigon: {
-            drawFunc: length => drawPolygon(length, 42),
-            sideMax: 30,
-        },
-    };
 
-    let intervalId = null;
-    let lineWidth = 1;
-    let lowerBound = parseFloat(document.querySelector('#lowerBound').value);
-    let upperBound = parseFloat(document.querySelector('#upperBound').value);
-    let shape = shapes[document.querySelector('input[name="shape"]').value];
-    let randomColors = document.querySelector('#randomColors').checked;
-    let destroy = document.querySelector('#destroy').checked;
-    let speed;
 
     document.querySelectorAll('input[name="speed"').forEach(i => {
         if (i.checked) {
@@ -266,7 +273,7 @@
     });
 
     document.querySelectorAll('input[name="speed"]').forEach(r => {
-        r.addEventListener('change', function(e) {
+       r.addEventListener('change', function(e) {
             speed = parseFloat(e.currentTarget.value);
         })
     });
@@ -297,8 +304,34 @@
      	'Fun drawings!🐢',
      	'JS drawings!🐢🐢',
      	'help',
+     	'it hurts',
     ];
+
+    let bodyRotate = 0;
+    let bodyRotateSpeed = 60000;
+    let lastRun = Date.now();
+    setInterval(() => {
+    	if (tetraClicked) {
+	    	document.body.style = `transform: rotate(${bodyRotate}deg) scale(${1 - (bodyRotate / 100)})`
+	    	bodyRotateSpeed = 1000;
+	    	bodyRotate++;
+    	}
+
+    	if (Date.now() > lastRun + bodyRotateSpeed && !tetraClicked) {
+    		lastRun = Date.now();
+	    	document.body.style = `transform: rotate(${bodyRotate++}deg)`
+    	}
+
+    	if (bodyRotateSpeed) {
+    		bodyRotateSpeed--;
+    	}	
+
+    }, 1);
+
     document.querySelector('h1').innerHTML = headlines[Math.floor(Math.random() * headlines.length)];
+    document.querySelector('h1').addEventListener('click', function() {
+    	this.innerHTML = 'your life is worth more than this';
+    });
     </script>
 </body>
 
